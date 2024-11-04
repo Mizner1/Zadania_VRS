@@ -28,21 +28,11 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
-
 extern I2C_HandleTypeDef hi2c1;
 
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
-
 void MX_I2C1_Init(void);
-
-/* USER CODE BEGIN Prototypes */
-
-/* USER CODE END Prototypes */
+HAL_StatusTypeDef i2c_master_read_bytes(uint16_t DevAddress, uint16_t RegAddress, uint8_t* pData, uint16_t Size);
+HAL_StatusTypeDef i2c_master_write_bytes(uint16_t DevAddress, uint16_t RegAddress, uint8_t* pData, uint16_t Size);
 
 #ifdef __cplusplus
 }

@@ -19,94 +19,73 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
+#include "usart.h"
 #include "gpio.h"
+//#include "LPS25HB.h"
+#include "../LPS25HB/LPS25HB.h"
+//#include "HTS221.h"
+#include "../HTS221/HTS221.h"
+#include "usart.h"
+#include "stm32f3xx_hal.h"
+#include <string.h>
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-
-/* USER CODE END PD */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-/* USER CODE BEGIN PFP */
 
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
-
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
+  __HAL_RCC_GPIOB_CLK_ENABLE(); // Povolenie hodinového signálu pre GPIOB
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; // Output push-pull
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct); // Inicializácia GPIOB, PIN 3
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  /* USER CODE BEGIN 2 */
+  MX_USART2_UART_Init();
 
-  /* USER CODE END 2 */
+  //inicializuje senzory
+  LPS25HB_Init(i2c_master_read_bytes, i2c_master_write_bytes);
+  HTS221_Init(i2c_master_read_bytes, i2c_master_write_bytes);
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  // Nastavenie počiatočného tlaku
+  float initial_pressure = LPS25HB_ReadPressure();
+  LPS25HB_SetReferencePressure(initial_pressure);
+
   while (1)
   {
-    /* USER CODE END WHILE */
+	  float current_pressure = LPS25HB_ReadPressure();
+	  float altitude = LPS25HB_CalculateAltitude(current_pressure);
+	  float temperature = HTS221_ReadTemperature();
+	  float humidity = HTS221_ReadHumidity();
 
-    /* USER CODE BEGIN 3 */
+	  //USART_SendString("Testovacia sprava\n");
+	  // Odoslanie formátovaných dát cez USART
+	  USART_SendFormattedData(temperature, humidity, current_pressure, altitude);
+
+	  //LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_3);  // Zapnutie LED
+	  //HAL_Delay(200);                              // Pauza 0,2 sekundy
+	  //LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_3); // Vypnutie LED
+
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
+	  HAL_Delay(200); // Pauza 0,2 sekundy
+	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
+
+	  HAL_Delay(1000);
+
   }
-  /* USER CODE END 3 */
+
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};

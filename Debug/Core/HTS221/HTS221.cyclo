@@ -1,0 +1,4 @@
+../Core/HTS221/HTS221.c:17:9:HTS221_WriteRegister	1
+../Core/HTS221/HTS221.c:22:9:HTS221_Init	2
+../Core/HTS221/HTS221.c:43:7:HTS221_ReadTemperature	1
+../Core/HTS221/HTS221.c:59:7:HTS221_ReadHumidity	1
