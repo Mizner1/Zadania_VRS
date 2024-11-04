@@ -52,13 +52,29 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
 
-  //inicializuje senzory
+  //testujem ci sa program dostal az sem
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
+  HAL_Delay(200); // Pauza 0,2 sekundy
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
+  HAL_Delay(500); // Pauza 0,5 sekundy
+
+  //inicializuje senzory, tu sa to zasekne
   LPS25HB_Init(i2c_master_read_bytes, i2c_master_write_bytes);
   HTS221_Init(i2c_master_read_bytes, i2c_master_write_bytes);
+
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
+  HAL_Delay(200); // Pauza 0,2 sekundy
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
+  HAL_Delay(500); // Pauza 0,5 sekundy
 
   // Nastavenie počiatočného tlaku
   float initial_pressure = LPS25HB_ReadPressure();
   LPS25HB_SetReferencePressure(initial_pressure);
+
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
+  HAL_Delay(200); // Pauza 0,2 sekundy
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
+  HAL_Delay(500); // Pauza 0,5 sekundy
 
   while (1)
   {
@@ -67,9 +83,9 @@ int main(void)
 	  float temperature = HTS221_ReadTemperature();
 	  float humidity = HTS221_ReadHumidity();
 
-	  //USART_SendString("Testovacia sprava\n");
+	  USART_SendString("Testovacia sprava\n");
 	  // Odoslanie formátovaných dát cez USART
-	  USART_SendFormattedData(temperature, humidity, current_pressure, altitude);
+	  //USART_SendFormattedData(temperature, humidity, current_pressure, altitude);
 
 	  //LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_3);  // Zapnutie LED
 	  //HAL_Delay(200);                              // Pauza 0,2 sekundy
@@ -80,7 +96,6 @@ int main(void)
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
 
 	  HAL_Delay(1000);
-
   }
 
 }

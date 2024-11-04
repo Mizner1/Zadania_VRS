@@ -25,8 +25,10 @@
 
 /* Deklarácie funkcií */
 uint8_t LPS25HB_WriteRegister(uint8_t reg_address, uint8_t data);
-uint8_t LPS25HB_Init(void (*i2c_read)(uint8_t, uint8_t, uint8_t*, uint16_t),
-                     void (*i2c_write)(uint8_t, uint8_t, uint8_t*, uint16_t));
+uint8_t LPS25HB_Init(void (*i2c_read)(uint16_t, uint16_t, uint8_t*, uint16_t),
+                     void (*i2c_write)(uint16_t, uint16_t, uint8_t*, uint16_t));
+//uint8_t LPS25HB_Init(HAL_StatusTypeDef (*i2c_read)(uint16_t, uint16_t, uint8_t*, uint16_t),
+//					HAL_StatusTypeDef (*i2c_write)(uint16_t, uint16_t, uint8_t*, uint16_t));
 float LPS25HB_ReadPressure(void);
 void LPS25HB_SetReferencePressure(float initial_pressure);
 float LPS25HB_CalculateAltitude(float current_pressure);
