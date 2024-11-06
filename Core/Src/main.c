@@ -21,9 +21,7 @@
 #include "i2c.h"
 #include "usart.h"
 #include "gpio.h"
-//#include "LPS25HB.h"
 #include "../LPS25HB/LPS25HB.h"
-//#include "HTS221.h"
 #include "../HTS221/HTS221.h"
 #include "usart.h"
 #include "stm32f3xx_hal.h"
@@ -54,27 +52,33 @@ int main(void)
 
   //testujem ci sa program dostal az sem
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
-  HAL_Delay(200); // Pauza 0,2 sekundy
+  HAL_Delay(1000); // Pauza 1 s
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
-  HAL_Delay(500); // Pauza 0,5 sekundy
+  HAL_Delay(3000); // Pauza 3 s
 
-  //inicializuje senzory, tu sa to zasekne
-  LPS25HB_Init(i2c_master_read_bytes, i2c_master_write_bytes);
-  HTS221_Init(i2c_master_read_bytes, i2c_master_write_bytes);
-
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
-  HAL_Delay(200); // Pauza 0,2 sekundy
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
-  HAL_Delay(500); // Pauza 0,5 sekundy
+  //inicializuje senzory, uspech - blikne LED
+  if( LPS25HB_Init(i2c_master_read_bytes, i2c_master_write_bytes) )
+  {
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
+	HAL_Delay(200); // Pauza 0,2 s
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
+	HAL_Delay(500); // Pauza 0,5 s
+  }
+ if( HTS221_Init(i2c_master_read_bytes, i2c_master_write_bytes) ){
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
+	HAL_Delay(500); // Pauza 0,5 s
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
+	HAL_Delay(3000); // Pauza 3 s
+ }
 
   // Nastavenie počiatočného tlaku
   float initial_pressure = LPS25HB_ReadPressure();
   LPS25HB_SetReferencePressure(initial_pressure);
 
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
-  HAL_Delay(200); // Pauza 0,2 sekundy
+  HAL_Delay(1000); // Pauza 1 s
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // Vypnutie LED
-  HAL_Delay(500); // Pauza 0,5 sekundy
+  HAL_Delay(3000); // Pauza 3 s
 
   while (1)
   {
@@ -83,13 +87,8 @@ int main(void)
 	  float temperature = HTS221_ReadTemperature();
 	  float humidity = HTS221_ReadHumidity();
 
-	  USART_SendString("Testovacia sprava\n");
-	  // Odoslanie formátovaných dát cez USART
-	  //USART_SendFormattedData(temperature, humidity, current_pressure, altitude);
-
-	  //LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_3);  // Zapnutie LED
-	  //HAL_Delay(200);                              // Pauza 0,2 sekundy
-	  //LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_3); // Vypnutie LED
+	  //USART_SendString("Testovacia sprava\n");
+	  USART_SendFormattedData(temperature, humidity, current_pressure, altitude);
 
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET); // Zapnutie LED
 	  HAL_Delay(200); // Pauza 0,2 sekundy

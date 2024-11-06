@@ -9,6 +9,7 @@
 #define HTS221_H_
 
 #include <stdint.h>  // Pre uint8_t, uint16_t, atď.
+#include "i2c.h"
 
 // Adresy registrov
 #define HTS221_ADDRESS            0x5F  // I2C adresa HTS221 (pozri datasheet pre prípadné odlišnosti)
@@ -22,10 +23,8 @@
 
 // Inicializácia senzora
 uint8_t HTS221_WriteRegister(uint8_t reg_address, uint8_t data);
-uint8_t HTS221_Init(void (*i2c_read)(uint16_t, uint16_t, uint8_t*, uint16_t),
-                    void (*i2c_write)(uint16_t, uint16_t, uint8_t*, uint16_t));
-//uint8_t HTS221_Init(HAL_StatusTypeDef (*i2c_read)(uint16_t, uint16_t, uint8_t*, uint16_t),
-//					HAL_StatusTypeDef (*i2c_write)(uint16_t, uint16_t, uint8_t*, uint16_t));
+uint8_t HTS221_Init(HAL_StatusTypeDef (*i2c_read)(uint16_t, uint16_t, uint8_t*, uint16_t),
+					HAL_StatusTypeDef (*i2c_write)(uint16_t, uint16_t, uint8_t*, uint16_t));
 
 // Funkcie na čítanie hodnôt
 float HTS221_ReadTemperature(void);

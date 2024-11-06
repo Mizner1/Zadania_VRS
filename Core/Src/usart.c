@@ -89,7 +89,7 @@ void USART_SendString(char *str) {
 void USART_SendFormattedData(float temperature, float humidity, float pressure, float altitude) {
     char buffer[50];
     // Formátovanie údajov podľa požadovanej štruktúry CSV
-    snprintf(buffer, sizeof(buffer), "%.1f,%.0f,%.2f,%.2f\n", temperature, humidity, pressure, altitude);
+    snprintf(buffer, sizeof(buffer), "%.1f,%.0f,%.2f,%.2f\n\r", temperature, humidity, pressure, altitude);
     USART_SendString(buffer);
 }
 /* USER CODE END 1 */

@@ -28,21 +28,6 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE(); // Povolenie hodinového signálu pre GPIO port B
 }
 
-//toto bolo v MX_GPIO_Init
-//ak to nefunguje pouzi toto
-//LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA);
-//LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
-
-//GPIO_InitTypeDef GPIO_InitStruct = {0};
-//GPIO_InitStruct.Pin = GPIO_PIN_3;
-//GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP; // Output push-pull
-//GPIO_InitStruct.Pull = GPIO_NOPULL;
-//GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-//HAL_GPIO_Init(GPIOB, &GPIO_InitStruct); // Inicializácia GPIOB, PIN 3
-
-
-//LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_3, LL_GPIO_MODE_OUTPUT);
-
 /* USER CODE BEGIN 2 */
 
 /* USER CODE END 2 */

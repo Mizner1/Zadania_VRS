@@ -1,5 +1,0 @@
-../Core/Src/usart.c:27:6:MX_USART2_UART_Init	2
-../Core/Src/usart.c:45:6:HAL_UART_MspInit	2
-../Core/Src/usart.c:68:6:HAL_UART_MspDeInit	2
-../Core/Src/usart.c:85:6:USART_SendString	1
-../Core/Src/usart.c:89:6:USART_SendFormattedData	1
